@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Serralheria Silva</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --steel: #b0bec5;
+    --iron: #1a1a1a;
+    --rust: #e65100;
+    --fire: #ff6f00;
+    --ember: #ffd54f;
+    --dark: #0d0d0d;
+    --mid: #1c1c1c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: #e0e0e0;
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* SPARKS */
+  .sparks-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(230,81,0,0.25) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 30%, rgba(255,111,0,0.15) 0%, transparent 50%),
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 40px,
+        rgba(255,255,255,0.012) 40px,
+        rgba(255,255,255,0.012) 41px
+      );
+    z-index: -1;
+  }
+
+  .gear-bg {
+    position: absolute;
+    opacity: 0.04;
+    font-size: 600px;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: spin 60s linear infinite;
+    user-select: none;
+    z-index: -1;
+    line-height: 1;
+  }
+
+  @keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--rust), var(--fire));
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.35rem 1.2rem;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0% 50%);
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .logo {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: clamp(3rem, 10vw, 7rem);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    animation: fadeDown 0.9s ease 0.1s both;
+  }
+
+  .logo .serralheria {
+    display: block;
+    background: linear-gradient(180deg, #e0e0e0 0%, #9e9e9e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .logo .silva {
+    display: block;
+    background: linear-gradient(180deg, var(--fire) 0%, var(--rust) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 0 40px rgba(255,111,0,0.5));
+  }
+
+  .tagline {
+    margin-top: 1.5rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9e9e9e;
+    animation: fadeDown 1s ease 0.2s both;
+  }
+
+  .divider {
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--rust), var(--ember));
+    margin: 1.5rem auto;
+    animation: expandW 1s ease 0.3s both;
+  }
+
+  @keyframes expandW {
+    from { width: 0; opacity: 0; }
+    to { width: 80px; opacity: 1; }
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SERVICES */
+  .services {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+  }
+
+  .section-title span {
+    color: var(--fire);
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card {
+    background: linear-gradient(135deg, #1e1e1e, #161616);
+    border: 1px solid #2a2a2a;
+    border-top: 3px solid var(--rust);
+    padding: 2rem 1.5rem;
+    border-radius: 4px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-top-color 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 0;
+    background: linear-gradient(to top, rgba(255,111,0,0.05), transparent);
+    transition: height 0.4s ease;
+  }
+
+  .card:hover { 
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(255,111,0,0.1);
+    border-top-color: var(--fire);
+  }
+
+  .card:hover::before { height: 100%; }
+
+  .card-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+    filter: drop-shadow(0 0 8px rgba(255,111,0,0.4));
+  }
+
+  .card h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    color: #e0e0e0;
+  }
+
+  .card p {
+    font-size: 0.9rem;
+    color: #757575;
+    line-height: 1.6;
+  }
+
+  /* CONTACT STRIP */
+  .contact-strip {
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(135deg, var(--rust), var(--fire));
+    padding: 3rem 2rem;
+    text-align: center;
+    clip-path: polygon(0 10%, 100% 0%, 100% 90%, 0 100%);
+    margin: 2rem 0;
+  }
+
+  .contact-strip h2 {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-strip p {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+  }
+
+  .phone {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: #fff;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 2rem;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+
+  /* BUTTONS */
+  .btn-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+    padding: 0 1rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 2rem;
+    border-radius: 4px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0);
+    transition: background 0.2s ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    filter: brightness(1.1);
+  }
+
+  .btn:hover::after { background: rgba(255,255,255,0.08); }
+  .btn:active { transform: scale(0.97); }
+
+  .btn-wpp {
+    background: #25D366;
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+  }
+
+  .btn-insta {
+    background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCB045);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(253,29,29,0.3);
+  }
+
+  .btn svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    fill: currentColor;
+  }
+
+  /* ABOUT */
+  .about {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+
+  .about p {
+    font-size: 1.05rem;
+    color: #9e9e9e;
+    line-height: 1.8;
+  }
+
+  .about strong {
+    color: var(--fire);
+  }
+
+  /* METAL TEXTURE LINE */
+  .metal-line {
+    height: 4px;
+    background: repeating-linear-gradient(
+      90deg,
+      #1a1a1a 0px, #1a1a1a 8px,
+      #2a2a2a 8px, #2a2a2a 16px,
+      #333 16px, #333 24px,
+      #222 24px, #222 32px
+    );
+    position: relative;
+    z-index: 1;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 2rem;
+    background: #0a0a0a;
+    border-top: 1px solid #1e1e1e;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    color: #424242;
+    letter-spacing: 0.1em;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+
+  footer span {
+    color: var(--fire);
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 480px) {
+    .contact-strip {
+      clip-path: none;
+    }
+    .btn { width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<canvas class="sparks-canvas" id="sparks"></canvas>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="gear-bg">⚙</div>
+  <div class="badge">🛠 Especialistas em Ferro</div>
+  <div class="logo">
+    <span class="serralheria">Serralheria</span>
+    <span class="silva">Silva</span>
+  </div>
+  <div class="divider"></div>
+  <p class="tagline">Qualidade e Acabamento Impecável</p>
+  <div class="btn-group" style="margin-top:2.5rem; animation: fadeDown 1s ease 0.4s both;">
+    <a href="https://wa.me/5562967873422" class="btn btn-wpp">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+    <a href="https://www.instagram.com/serralheiriasilva?igsh=NDQ0bGlsNTdtYmZl" target="_blank" class="btn btn-insta">
+      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      Instagram
+    </a>
+  </div>
+</section>
+
+<!-- METAL LINE -->
+<div class="metal-line"></div>
+
+<!-- SERVICES -->
+<section class="services">
+  <h2 class="section-title reveal">Nossos <span>Serviços</span></h2>
+  <div class="cards">
+    <div class="card reveal">
+      <span class="card-icon">🚪</span>
+      <h3>Portões</h3>
+      <p>Portões residenciais e comerciais com design exclusivo e durabilidade garantida.</p>
+    </div>
+    <div class="card reveal">
+      <span class="card-icon">🏗️</span>
+      <h3>Coberturas</h3>
+      <p>Coberturas metálicas para garagens, varanda, indústrias e muito mais.</p>
+    </div>
+    <div class="card reveal">
+      <span class="card-icon">⚙️</span>
+      <h3>Estruturas Metálicas</h3>
+      <p>Estruturas sob medida para todo tipo de projeto com ferro de alta qualidade.</p>
+    </div>
+    <div class="card reveal">
+      <span class="card-icon">🔧</span>
+      <h3>Ferro em Geral</h3>
+      <p>Grades, escadas, corrimão, mezanino e qualquer trabalho em ferro sob encomenda.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT STRIP -->
+<section class="contact-strip reveal">
+  <h2>Peça seu Orçamento</h2>
+  <p>Atendimento rápido • Preço justo • Qualidade garantida</p>
+  <span class="phone">📲 (62) 9678-7342</span>
+  <div class="btn-group">
+    <a href="https://wa.me/5562967873422" class="btn btn-wpp">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Chamar no WhatsApp
+    </a>
+    <a href="https://www.instagram.com/serralheiriasilva?igsh=NDQ0bGlsNTdtYmZl" target="_blank" class="btn btn-insta">
+      <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      Ver no Instagram
+    </a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about reveal">
+  <p>A <strong>Serralheria Silva</strong> atua com <strong>dedicação e excelência</strong> em trabalhos com ferro há anos. Do simples ao complexo, entregamos cada projeto com capricho, solidez e o cuidado que sua obra merece. <strong>Qualidade e acabamento impecável</strong> é o nosso compromisso.</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Serralheria Silva • Todos os direitos reservados</p>
+  <p style="margin-top:0.5rem;">Site desenvolvido por <span>Marcus</span></p>
+</footer>
+
+<script>
+// SPARKS ANIMATION
+const canvas = document.getElementById('sparks');
+const ctx = canvas.getContext('2d');
+let W = canvas.width = window.innerWidth;
+let H = canvas.height = window.innerHeight;
+
+window.addEventListener('resize', () => {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+});
+
+const particles = [];
+const colors = ['#ff6f00','#ffd54f','#e65100','#fff','#ffab40'];
+
+function rand(a, b) { return Math.random() * (b - a) + a; }
+
+function createSpark() {
+  return {
+    x: rand(0, W),
+    y: rand(H * 0.3, H * 0.8),
+    vx: rand(-0.5, 0.5),
+    vy: rand(-3, -0.5),
+    alpha: rand(0.6, 1),
+    size: rand(1, 3),
+    color: colors[Math.floor(Math.random() * colors.length)],
+    life: rand(60, 150),
+    age: 0
+  };
+}
+
+for (let i = 0; i < 60; i++) particles.push(createSpark());
+
+function animate() {
+  ctx.clearRect(0, 0, W, H);
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.age++;
+    const progress = p.age / p.life;
+    const alpha = p.alpha * (1 - progress);
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = p.color;
+    ctx.shadowBlur = 6;
+    ctx.shadowColor = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size * (1 - progress * 0.5), 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    if (p.age >= p.life) particles[i] = createSpark();
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+
+// SCROLL REVEAL
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
